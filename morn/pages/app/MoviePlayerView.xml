@@ -1,0 +1,7 @@
+<View width="567" height="640" sceneColor="0xffffff" layers="1,1,0,0,第 1 层">
+  <Image skin="png.comp.blank" x="0" y="0" layer="1" width="567" height="640" var="img_bg"/>
+  <Label text="拖入文件夹生成或拖入json预览" styleSkin="png.comp.label" x="1" y="312" layer="1" color="0x999999" stroke="0" width="567" height="32" align="center" size="18" var="txtDes" isHtml="true"/>
+  <Box layers="1,1,0,0,第 1 层" layer="1" x="291" y="544" width="44" height="42" var="mcContain">
+    <Image skin="png.comp.blank" layer="1" x="0" y="0" width="44" height="42"/>
+  </Box>
+</View>

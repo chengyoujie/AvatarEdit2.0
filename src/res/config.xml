@@ -1,0 +1,13 @@
+<toolsconfig 
+title="角色编辑器@cyj"
+appName="角色编辑器"
+
+version="1.0.1"
+
+
+svnpath="$apppath/res/bin/svnbin/svn.exe" 
+svnoutpath="D:/svnOut/"
+
+logpath="$apppath/res/log/log.txt"
+
+/>

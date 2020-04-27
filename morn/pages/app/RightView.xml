@@ -1,0 +1,30 @@
+<View width="230" height="710" sceneColor="0xffffff" layers="1,1,0,0,第 1 层">
+  <Image skin="png.guidecomp.框_02" x="0" y="0" layer="1" sizeGrid="3,3,3,3,1" width="230" height="711" var="img_bg"/>
+  <Box layers="1,1,0,0,第 1 层" layer="1" x="1" y="624" var="boxBottom">
+    <CheckBox label="使用自动缩放至1024" skin="png.guidecomp.checkbox_单选" x="2" y="51" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkAutoScale" selected="true"/>
+    <CheckBox label="是否使用旋转" skin="png.guidecomp.checkbox_单选" y="26" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkAutoRotation" selected="true"/>
+    <CheckBox label="是否保留目录" skin="png.guidecomp.checkbox_单选" x="1" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkSaveDirStruct" selected="true"/>
+  </Box>
+  <Box layers="1,1,0,0,第 1 层" layer="1" x="2" y="33" var="boxTop">
+    <TextInput skin="png.guidecomp.textinput_文字输入底框_2" x="59" y="193" layer="1" width="50" height="22" color="0xff6600" var="inputOffX" margin="3,2,2,2"/>
+    <Label text="偏移X：" styleSkin="png.comp.label" y="193" layer="1" color="0xff9900" stroke="0" x="7"/>
+    <TextInput skin="png.guidecomp.textinput_文字输入底框_2" x="59" y="220" layer="1" width="50" height="22" color="0xff6600" var="inputOffY" margin="3,2,2,2"/>
+    <Label text="偏移Y：" styleSkin="png.comp.label" x="7" y="220" layer="1" color="0xff9900" stroke="0"/>
+    <TextInput skin="png.guidecomp.textinput_文字输入底框_2" x="59" y="165" layer="1" width="50" height="22" color="0xff6600" var="inputSpeed" margin="3,2,2,2"/>
+    <Label text="帧速:" styleSkin="png.comp.label" x="23" y="165" layer="1" color="0xff9900" stroke="0"/>
+    <Button label="保存" skin="png.guidecomp.btn_小按钮_1" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnSave" labelStroke="0" width="61" height="32" x="69" y="258"/>
+    <Button label="置零" skin="png.guidecomp.btn_小按钮_1" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnOffsetZero" labelStroke="0" width="58" height="28" x="117" y="215"/>
+    <Label skin="png.comp.textarea" x="59" y="132" layer="1" width="100" height="22" color="0xff6600" var="txtScale" margin="3,2,2,2"/>
+    <Label text="缩放:" styleSkin="png.comp.label" x="23" y="132" layer="1" color="0xff9900" stroke="0"/>
+    <Label skin="png.comp.textarea" x="59" y="99" layer="1" width="100" height="22" color="0xff6600" var="txtFileName" margin="3,2,2,2"/>
+    <Label text="文件名:" styleSkin="png.comp.label" x="11" y="100" layer="1" color="0xff9900" stroke="0"/>
+    <Label skin="png.comp.textarea" x="59" layer="1" width="73" height="22" color="0xff6600" var="txtFrame" margin="3,2,2,2" y="72"/>
+    <Label text="当前帧:" styleSkin="png.comp.label" x="11" y="73" layer="1" color="0xff9900" stroke="0"/>
+    <Button label="上一帧" skin="png.guidecomp.btn_小按钮_1" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnPre" labelStroke="0" width="58" height="28" x="21"/>
+    <Button label="暂停" skin="png.guidecomp.btn_小按钮_1" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnPlay" labelStroke="0" width="58" height="28" x="82"/>
+    <Button label="下一帧" skin="png.guidecomp.btn_小按钮_1" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnNext" labelStroke="0" width="58" height="28" x="145"/>
+    <Label text="/12" styleSkin="png.comp.label" x="137" y="74" layer="1" color="0xff9900" var="txtTotalFrame"/>
+    <Label skin="png.comp.textarea" x="59" layer="1" width="100" height="22" color="0xff6600" var="txtTotalTime" margin="3,2,2,2" y="42"/>
+    <Label text="总时间:" styleSkin="png.comp.label" x="11" y="43" layer="1" color="0xff9900" stroke="0"/>
+  </Box>
+</View>

@@ -1,0 +1,6 @@
+<View width="180" height="25" sceneColor="0xffffff" layers="1,1,0,0,第 1 层">
+  <Clip skin="png.comp.clip_selectBox" x="12" y="1" layer="1" clipY="2" name="selectBox" left="12" right="0" height="24" width="108" mouseEnabled="false"/>
+  <Clip skin="png.comp.clip_tree_folder" x="17" y="5" layer="1" clipY="3" name="folder" clipX="1" mouseEnabled="false"/>
+  <Label text="treeItem" x="43" layer="1" color="0xffffff" name="label" y="5" width="150" height="22" left="33" right="0" var="txtName" backgroundColor="0xffffff"/>
+  <Clip y="4" layer="1" clipY="2" name="arrow" x="-2" skin="png.comp.clip_tree_arrow" width="19" height="18"/>
+</View>
