@@ -16,7 +16,7 @@
   </Box>
   <UIView source="app/LeftView.xml" x="0" y="39" layer="3" runtime="com.cyj.app.view.view.LeftView" var="leftView"/>
   <UIView source="app/RightView.xml" x="789" y="48" layer="3" runtime="com.cyj.app.view.view.RightView" var="rightView"/>
-  <Box layers="1,1,0,0,第 1 层" layer="1" x="934" y="11" var="boxTools">
+  <Box layers="1,1,0,0,第 1 层" layer="1" x="930" y="8" var="boxTools">
     <Button label="Log" skin="png.guidecomp.btn_小按钮_1" x="41" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0x0" var="btnViewLog" width="43" height="32" sizeGrid="10,"/>
     <Button skin="png.guidecomp.btn_小按钮_1" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0x0" var="btnOpenWeb" width="43" height="32" sizeGrid="10," label="Web"/>
   </Box>

@@ -102,8 +102,8 @@ package com.cyj.app.view.unit.data
 			for(var i:int=0; i<sub.length; i++)
 			{
 				var item:SubTextureData = sub[i];
-				item.ox += offX*1/this.scale;
-				item.oy += offY*1/this.scale;
+				item.ox += offX * this.scale;
+				item.oy += offY * this.scale;
 			}
 			refushMaxRect();
 		}

@@ -43,7 +43,7 @@ package com.cyj.app.view.ui.app {
 			  </Box>
 			  <LeftView x="0" y="39" runtime="com.cyj.app.view.view.LeftView" var="leftView"/>
 			  <RightView x="789" y="48" runtime="com.cyj.app.view.view.RightView" var="rightView"/>
-			  <Box x="934" y="11" var="boxTools">
+			  <Box x="930" y="8" var="boxTools">
 			    <Button label="Log" skin="png.guidecomp.btn_小按钮_1" x="41" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0x0" var="btnViewLog" width="43" height="32" sizeGrid="10,"/>
 			    <Button skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0x0" var="btnOpenWeb" width="43" height="32" sizeGrid="10," label="Web"/>
 			  </Box>

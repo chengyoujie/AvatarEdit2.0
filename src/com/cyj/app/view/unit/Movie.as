@@ -5,6 +5,7 @@ package com.cyj.app.view.unit
 	import com.cyj.app.view.common.Alert;
 	import com.cyj.app.view.unit.data.MovieData;
 	import com.cyj.app.view.unit.data.SubTextureData;
+	import com.cyj.utils.Log;
 	import com.cyj.utils.load.ResData;
 	import com.cyj.utils.load.ResLoader;
 	
@@ -61,8 +62,14 @@ package com.cyj.app.view.unit
 			_cacheImg = {};
 			var file:File = new File(_jsonFilePath);
 			_fileName = file.name.replace("."+file.extension, "");
-			ToolsApp.loader.loadSingleRes(_jsonFilePath, ResLoader.TXT, handleDataLoaded);
-			ToolsApp.loader.loadSingleRes(_jsonFilePath.replace(".json", ".png"), ResLoader.IMG, handleImageLoaded);
+			ToolsApp.loader.loadSingleRes(_jsonFilePath, ResLoader.TXT, handleDataLoaded, null, handleLoadError);
+			ToolsApp.loader.loadSingleRes(_jsonFilePath.replace(".json", ".png"), ResLoader.IMG, handleImageLoaded, null, handleLoadError);
+		}
+		
+		private function handleLoadError(res:ResData, msg:String):void
+		{
+			Alert.show("加载错误"+res.resPath+"\n"+msg);
+			Log.log("加载错误"+res.resPath+"\n"+msg);
 		}
 		
 		
@@ -179,6 +186,24 @@ package com.cyj.app.view.unit
 		public function get frame():int
 		{
 			return _frame;
+		}
+		
+		public function get totalFrame():int
+		{
+			if(_data)
+				return _data.sub.length;
+			return 0;
+		}
+		
+		public function getSubImg(frame:int):BitmapData
+		{
+//			if(frame<0)
+//			{
+//				frame = _data.sub.length - 1;
+//			}else{
+//				frame = frame%_data.sub.length;
+//			}
+			return _cacheImg[frame];
 		}
 		
 		public function get data():MovieData

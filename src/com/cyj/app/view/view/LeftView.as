@@ -72,6 +72,7 @@ package com.cyj.app.view.view
 				return;
 			}
 			ToolsApp.data.outPath = filePath;
+			handleRefushTreeOut();
 		}
 		
 		private function handleClearAllMovie():void
@@ -125,6 +126,7 @@ package com.cyj.app.view.view
 		{
 			inputOutPath.text = filePath;
 			ToolsApp.data.outPath = filePath;
+			handleRefushTreeOut();
 		}
 		
 		public function handleRemoveMovie(e:SimpleEvent):void

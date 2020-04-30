@@ -166,7 +166,7 @@ package com.cyj.app.texturepacker
 				_canUseScale = Math.ceil(_curScale*10000)/10000;//可以使用的值
 				if(ToolsApp.data.autoScale && _curScale != 1)//使用缩放打包
 				{
-					if(Math.abs(_lastScale - _curScale)>0.01 && _packScaleNum<=5)//缩放的最小阀值    如果大于该值则表示  还有可以缩放的空间
+					if(Math.abs(_lastScale - _curScale)>0.01 && _packScaleNum>5)//缩放的最小阀值    如果大于该值则表示  还有可以缩放的空间
 					{
 						newScale = (_lastScale - _curScale)/2 + _curScale;
 						Log.log("当前图片尺寸: width: "+w+" height:"+h+"  尝试使用：scale="+newScale+" 打包图片");

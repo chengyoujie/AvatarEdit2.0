@@ -36,6 +36,7 @@ package com.cyj.app.view.view
 			boxDir.visible = false;
 			ToolsApp.texturePacker.init();
 			leftView.initView();
+			rightView.initView();
 			App.stage.addEventListener(Event.RESIZE, handleSizeChange);
 			handleSizeChange();
 			leftView.addEventListener(MouseEvent.MOUSE_DOWN, handleStartDrag, true);

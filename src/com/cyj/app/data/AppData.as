@@ -20,6 +20,8 @@ package com.cyj.app.data
 		public var texturePackerPath:String = File.applicationDirectory.nativePath+"/bin/texturepacker/";
 		public var gameURL:String = "http://172.18.2.61/web/";
 		public var localJsonPath:String = File.userDirectory.nativePath+"/AvatarEdit2.0/local.json";
+		public var outImgPath:String = "D:/";
+		public var outImgSaveScale:Boolean = true;
 		
 		public function AppData()
 		{
@@ -33,6 +35,8 @@ package com.cyj.app.data
 			obj.autoScale = this.autoScale;
 			obj.autoRotation = this.autoRotation;
 			obj.saveDirStruct = this.saveDirStruct;
+			obj.outImgPath = this.outImgPath;
+			obj.outImgSaveScale = this.outImgSaveScale;
 			return JSON.stringify(obj);
 		}
 		
@@ -44,6 +48,8 @@ package com.cyj.app.data
 			this.autoScale = obj.autoScale ;
 			this.autoRotation = obj.autoRotation;
 			this.saveDirStruct = obj.saveDirStruct;
+			this.outImgPath = obj.outImgPath;
+			this.outImgSaveScale = obj.outImgSaveScale;
 		}
 		
 		

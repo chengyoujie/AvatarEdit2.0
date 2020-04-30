@@ -6,7 +6,17 @@ package com.cyj.app.view.view
 	import com.cyj.app.view.common.Alert;
 	import com.cyj.app.view.ui.app.RightViewUI;
 	import com.cyj.app.view.unit.Movie;
+	import com.cyj.app.view.unit.data.MovieData;
+	import com.cyj.app.view.unit.data.SubTextureData;
 	import com.cyj.utils.Log;
+	import com.cyj.utils.images.PNGEncoder;
+	
+	import flash.display.BitmapData;
+	import flash.filesystem.File;
+	import flash.geom.Matrix;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.utils.ByteArray;
 	
 	import morn.core.handlers.Handler;
 	
@@ -34,14 +44,26 @@ package com.cyj.app.view.view
 				new BindData(inputOffY, "y"));
 			ToolsApp.event.on(SimpleEvent.MOVIE_SELECT, handleMovieSelectChange);
 			ToolsApp.event.on(SimpleEvent.MOVIE_POS_CHANGE, handleMoviePosChange);
-			checkAutoScale.selected = ToolsApp.data.autoScale;
-			checkAutoRotation.selected = ToolsApp.data.autoRotation;
-			checkSaveDirStruct.selected = ToolsApp.data.saveDirStruct;
 			
 			btnPlay.clickHandler = new Handler(handleMoviePlay);
 			btnPre.clickHandler = new Handler(handleMoviePre);
 			btnNext.clickHandler = new Handler(handleMovieNext);
+			btnExportImg.clickHandler = new Handler(handleExportImage);
+			btnExportSelectDir.clickHandler = new Handler(handleExportSelectDir);
+			btnExportOpenDir.clickHandler = new Handler(handleExportOpenDir);
+			checkExportImgScale.clickHandler = new Handler(handleExportImgScaleChange);
 		}
+		
+		public function initView():void
+		{
+			checkAutoScale.selected = ToolsApp.data.autoScale;
+			checkAutoRotation.selected = ToolsApp.data.autoRotation;
+			checkSaveDirStruct.selected = ToolsApp.data.saveDirStruct;
+			inputExportImg.text = ToolsApp.data.outImgPath;
+			checkExportImgScale.selected = ToolsApp.data.outImgSaveScale;
+			
+		}
+		
 		
 		public function resize(w:int, h:int):void
 		{
@@ -176,6 +198,102 @@ package com.cyj.app.view.view
 			if(!movie)return;
 			movie.setFrame(movie.frame+1);
 			
+		}
+		
+		private function handleExportImgScaleChange():void
+		{
+			ToolsApp.data.outImgSaveScale = checkExportImgScale.selected;
+		}
+		
+		private function handleExportOpenDir():void
+		{
+			if(!inputExportImg.text)
+			{
+				Alert.show("请先设置导出目录");
+				return;
+			}
+			var file:File = new File(inputExportImg.text);
+			if(!file.exists)
+			{
+				Alert.show("当前目录不存在"+inputExportImg.text);
+				return;
+			}
+			file.openWithDefaultApplication();
+		}
+		
+		private function handleExportSelectDir():void
+		{
+			ToolsApp.file.openFile(handleOnExportSelectPath, true, ToolsApp.data.outImgPath);
+		}
+		
+		private function handleOnExportSelectPath(filePath:String):void
+		{
+			inputExportImg.text = filePath;
+			ToolsApp.data.outImgPath = filePath;
+		}
+		
+		private function handleExportImage():void
+		{
+			var movie:Movie = ToolsApp.data.selectMovie;
+			if(!movie)
+			{
+				Alert.show("当前没有选中要导出的特效");
+				return;
+			}
+			if(!inputExportImg.text)
+			{
+				Alert.show("请先设置导出目录");
+				return;
+			}
+			var file:File = new File(inputExportImg.text);
+			if(!file.exists)
+			{
+				Alert.show("当前目录不存在"+inputExportImg.text);
+				return;
+			}
+			var len:int = movie.totalFrame;
+			var data:MovieData = movie.data;
+			var saveScale:Boolean = checkExportImgScale.selected;
+			if(!data)
+			{
+				Alert.show("当前影片没有数据");
+				return;
+			}
+			var baseOffX:int = 0;
+			var baseOffY:int = 0;
+			if(data.sub.length>0)
+			{
+				var firstSub:SubTextureData = data.sub[0];
+				baseOffX = firstSub.ox+firstSub.w/2;
+				baseOffY = firstSub.oy+firstSub.h/2;
+			}
+			var scale:Number = 1;
+			if(data.scale)
+				scale = 1/data.scale;
+			for(var i:int=0; i<len; i++)
+			{
+				var bd:BitmapData = movie.getSubImg(i);
+				var frameData:SubTextureData = data.sub[i];
+				if(bd)
+				{
+					var w:int = Math.max(800, bd.width, bd.height);
+					var outBd:BitmapData = new BitmapData(w, w, true, 0);
+					var ox:Number = frameData.ox - baseOffX;
+					var oy:Number = frameData.oy - baseOffY;
+					if(saveScale && scale!=1)
+					{
+						outBd.draw(bd, new Matrix(scale, 0, 0, scale,scale*ox+w/2,oy+w/2));	
+					}else{
+						outBd.copyPixels(bd,new Rectangle(0, 0, bd.width, bd.height), new Point(ox+w/2,oy+w/2));	
+					}
+//					outBd.copyPixels(bd,new Rectangle(0, 0, bd.width, bd.height), new Point(w/2+ox,w/2+oy));//new Point(w/2-ox, w/2-oy));
+					var byte:ByteArray = PNGEncoder.encode(outBd);
+					var outPath:String = file.nativePath+"\\"+movie.fileName+"\\000"+i+".png";
+					ToolsApp.file.saveByteFile(outPath, byte);
+					Log.log("导出图片："+outPath);
+				}
+			}
+			Alert.show("导出完毕\n"+outPath);
 		}
 		
 	}
