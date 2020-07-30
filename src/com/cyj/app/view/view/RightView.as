@@ -30,6 +30,7 @@ package com.cyj.app.view.view
 		{
 			super();
 			btnSave.clickHandler = new Handler(handleSaveData);
+			btnReSetZero.clickHandler = new Handler(handleReSetZero);
 			btnOffsetZero.clickHandler = new Handler(handleOffsetZero);
 			checkAutoScale.clickHandler = new Handler(handleAutoScaleChange);
 			checkAutoRotation.clickHandler = new Handler(handleAutoRotationChange);
@@ -85,6 +86,19 @@ package com.cyj.app.view.view
 			movie.y = 0;
 			BindData.toBind(_bindMovie, movie);
 			ToolsApp.file.saveFile(movie.jsonPath, movie.data.toJson());
+		}
+		
+		private function handleReSetZero():void
+		{
+			var movie:Movie = ToolsApp.data.selectMovie;
+			if(!movie)
+			{
+				Alert.show("当前没有选中Movie");
+				return;
+			}
+			movie.data.resetOffset();
+			movie.x = 0;
+			movie.y = 0;
 		}
 		
 		private function handleMovieSelectChange(e:SimpleEvent):void
@@ -263,9 +277,21 @@ package com.cyj.app.view.view
 			var baseOffY:int = 0;
 			if(data.sub.length>0)
 			{
-				var firstSub:SubTextureData = data.sub[0];
-				baseOffX = firstSub.ox+firstSub.w/2;
-				baseOffY = firstSub.oy+firstSub.h/2;
+				var maxRectSize:int = 0;
+				for(var j:int=0; j<data.sub.length; j++)
+				{
+					var firstSub:SubTextureData = data.sub[j];
+					var size:int = Math.abs(firstSub.ox*firstSub.oy);
+					if(size > maxRectSize)
+					{
+						maxRectSize = size;
+						baseOffX = firstSub.ox+firstSub.w/2;
+						baseOffY = firstSub.oy+firstSub.h/2;
+					}
+				}
+//				var firstSub:SubTextureData = data.sub[0];
+//				baseOffX = firstSub.ox+firstSub.w/2;
+//				baseOffY = firstSub.oy+firstSub.h/2;
 			}
 			var scale:Number = 1;
 			if(data.scale)

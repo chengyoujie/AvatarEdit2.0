@@ -130,8 +130,8 @@ package com.cyj.app.view.unit
 				if(frameData.rotated)
 				{
 					bd = new BitmapData(frameData.w, frameData.h, true, 0);
-					var matrix:Matrix = new Matrix(0, -1, 1,0, 0, 0);
-					matrix.translate(-frameData.y, frameData.x+frameData.h);
+					var matrix:Matrix = new Matrix(0, -1, 1,0, -frameData.y, frameData.x+frameData.h);
+//					matrix.translate(-frameData.y, frameData.x+frameData.h);
 					bd.draw(_img, matrix, null, null);
 				}else{
 					bd = new BitmapData(frameData.w, frameData.h, true, 0);

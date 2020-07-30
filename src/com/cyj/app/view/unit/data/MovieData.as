@@ -108,15 +108,41 @@ package com.cyj.app.view.unit.data
 			refushMaxRect();
 		}
 		
+		public function resetOffset():void
+		{
+			if(sub.length==0)return;
+			var offX:Number = -sub[0].ox;//-sub[0].w/2;
+			var offY:Number = -sub[0].oy;//-sub[0].h/2;
+			for(var i:int=0; i<sub.length; i++)
+			{
+				var item:SubTextureData = sub[i];
+				item.ox += offX * this.scale;
+				item.oy += offY * this.scale;
+			}
+			refushMaxRect();
+		}
 		
-			
 		public static function getMovieData(jsonStr:String):MovieData
 		{
 			var json:Object = JSON.parse(jsonStr);
+			if(json.subtexture)//旧版的数据格式
+			{
+				var newJson:Object = {};
+				newJson.speed = json.speed;
+				newJson.sub = [];
+				for(var key:String in json.subtexture)
+				{
+					var spliteItem:Object = json.subtexture[key];
+//					var spliteArr:Array = newJson.sub[int(key)-1] = [];
+					newJson.sub.push(6, spliteItem[0], spliteItem[1], spliteItem[2], spliteItem[3], spliteItem[4], spliteItem[5]);
+				}
+				json = newJson;
+			}
 			if(!json.sub)
 			{
 				return null;
 			}
+			
 			var movie:MovieData = new MovieData();
 			var arr:Array = json.sub;
 			var i:int=0;

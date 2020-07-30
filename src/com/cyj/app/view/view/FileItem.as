@@ -21,6 +21,7 @@ package com.cyj.app.view.view
 		{
 			super.createChildren();
 			this.addEventListener(MouseEvent.CLICK, this.handleClick);
+			this.addEventListener(MouseEvent.RIGHT_CLICK, this.handleRightClick);
 		}
 		
 		private function handleClick(e:MouseEvent):void
@@ -28,6 +29,20 @@ package com.cyj.app.view.view
 			if(_data && !_data.isDirectory)
 				ToolsApp.event.post(SimpleEvent.CLICK_TREE_OUT_ITEM, _data);
 //				this.dispatchEvent(new SimpleEvent(EVENT_CLICK, _data));
+		}
+		
+		private function handleRightClick(e:MouseEvent):void
+		{
+			if(_data)
+			{
+				var file:File = new File(_data.path);
+				if(file.exists)
+				{
+					if(!file.isDirectory)
+						file = file.parent;
+					file.openWithDefaultApplication();
+				}	
+			}
 		}
 		
 		override public function set dataSource(value:Object):void

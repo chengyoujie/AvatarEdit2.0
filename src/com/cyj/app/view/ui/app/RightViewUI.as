@@ -26,6 +26,7 @@ package com.cyj.app.view.ui.app {
 		public var btnExportSelectDir:Button = null;
 		public var checkExportImgScale:CheckBox = null;
 		public var btnExportOpenDir:Button = null;
+		public var btnReSetZero:Button = null;
 		protected static var uiView:XML =
 			<View width="230" height="710">
 			  <Image skin="png.guidecomp.框_02" x="0" y="0" sizeGrid="3,3,3,3,1" width="230" height="711" var="img_bg"/>
@@ -42,7 +43,7 @@ package com.cyj.app.view.ui.app {
 			    <TextInput skin="png.guidecomp.textinput_文字输入底框_2" x="59" y="165" width="50" height="22" color="0xff6600" var="inputSpeed" margin="3,2,2,2"/>
 			    <Label text="帧速:" x="23" y="165" color="0xff9900" stroke="0"/>
 			    <Button label="保存" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnSave" labelStroke="0" width="61" height="32" x="69" y="258"/>
-			    <Button label="置零" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnOffsetZero" labelStroke="0" width="58" height="28" x="117" y="215"/>
+			    <Button label="置零" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnOffsetZero" labelStroke="0" width="50" height="28" x="117" y="215"/>
 			    <Label skin="png.comp.textarea" x="59" y="132" width="100" height="22" color="0xff6600" var="txtScale" margin="3,2,2,2"/>
 			    <Label text="缩放:" x="23" y="132" color="0xff9900" stroke="0"/>
 			    <Label skin="png.comp.textarea" x="59" y="99" width="100" height="22" color="0xff6600" var="txtFileName" margin="3,2,2,2"/>
@@ -61,6 +62,7 @@ package com.cyj.app.view.ui.app {
 			    <Button label="浏览" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnExportSelectDir" labelStroke="0" width="38" height="32" x="153" y="541"/>
 			    <CheckBox label="是否缩放导出" skin="png.guidecomp.checkbox_单选" x="-3" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkExportImgScale" selected="true" y="546"/>
 			    <Button label="打开" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnExportOpenDir" labelStroke="0" width="38" height="32" x="191" y="541"/>
+			    <Button label="置于原点" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnReSetZero" labelStroke="0" width="55" height="28" x="170" y="215"/>
 			  </Box>
 			</View>;
 		public function RightViewUI(){}
