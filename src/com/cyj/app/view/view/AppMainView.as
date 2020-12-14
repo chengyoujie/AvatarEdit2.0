@@ -4,10 +4,13 @@ package com.cyj.app.view.view
 	import com.cyj.app.data.PathInfo;
 	import com.cyj.app.data.ResType;
 	import com.cyj.app.event.SimpleEvent;
+	import com.cyj.app.other.SplitUIImage;
 	import com.cyj.app.view.common.Alert;
 	import com.cyj.app.view.ui.app.AppMainUI;
 	import com.cyj.app.view.unit.Movie;
 	import com.cyj.utils.Log;
+	import com.cyj.utils.load.ResData;
+	import com.cyj.utils.load.ResLoader;
 	
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -79,10 +82,21 @@ package com.cyj.app.view.view
 			}else{//一堆文件则判断
 				if(file.extension == "json")//导入预览功能
 				{
-					ToolsApp.data.addMovie(file.nativePath);
+					ToolsApp.loader.loadSingleRes(file.nativePath, ResLoader.TXT, checkLoadJsonFile);
 				}else if(isImage(file.extension)){
 					
 				}
+			}
+		}
+		
+		private function checkLoadJsonFile(res:ResData):void
+		{
+			var jsonData:Object = JSON.parse(res.data);
+			if(jsonData.frames && jsonData.file)//图集的， 直接分解
+			{
+				new SplitUIImage(res.resPath);
+			}else{
+				ToolsApp.data.addMovie(res.resPath);			
 			}
 		}
 		
