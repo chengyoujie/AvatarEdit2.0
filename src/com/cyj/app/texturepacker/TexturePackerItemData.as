@@ -2,8 +2,12 @@ package com.cyj.app.texturepacker
 {
 	import com.cyj.app.ToolsApp;
 	import com.cyj.app.data.PathInfo;
+	import com.cyj.app.view.common.Alert;
 	import com.cyj.app.view.unit.data.MovieData;
+	import com.cyj.utils.Log;
 	import com.cyj.utils.images.PNGEncoder;
+	import com.cyj.utils.load.ResData;
+	import com.cyj.utils.load.ResLoader;
 	
 	import flash.display.BitmapData;
 	import flash.filesystem.File;
@@ -15,10 +19,15 @@ package com.cyj.app.texturepacker
 		public var onComplete:Function;
 		public var onError:Function;
 		private var _data:MovieData;
-		private var _img:BitmapData;
 		private var _pathInfo:PathInfo;
 		private var _isComplete:Boolean= false;
 		private var _outPath:String;
+		private var _type:int = 0;
+		private var _typeParam:Number = 0;
+		private var _fileName:String;
+		private var _onComplete:Function;
+		private var _loadNum:int = 0;
+		private var _curLoadNum:int = 0;
 		
 		public function TexturePackerItemData(dirPath:String, onComplete:Function, onError:Function, pathInfo:PathInfo)
 		{
@@ -32,64 +41,110 @@ package com.cyj.app.texturepacker
 				saveFileName = saveFileName+"/"+saveFileName + "_"+_pathInfo.actName+"_"+_pathInfo.dirName;
 			_outPath = ToolsApp.data.outPath+"/"+(_pathInfo.addDirName?_pathInfo.addDirName:"")+"/"+saveFileName;
 			_outPath = _outPath.replace(/\/+/gi, "\\").replace(/\\+/gi, "\\");
+			_data = new MovieData();
 		}
 		
-		public function handleDataLoaded(data:*):void{
-//			_data = DataAdapter.converData(data, "json");
-			_data = new MovieData();
+		public function setParam(type:int, param:Number):void{
+			_type = type;
+			_typeParam= param;
+		}
+		
+		public function startLoad(fileName:String, onComplete:Function):void{
+			_fileName = fileName;
+			_onComplete = onComplete;
+			_loadNum = 2;
+			if(_type==1)_loadNum += (_typeParam-1)*2;
+			ToolsApp.loader.loadSingleRes(ToolsApp.CMD_WORK_PATH+"/"+fileName+".json", ResLoader.TXT, handleDataLoaded, null, handleLoadError);
+			ToolsApp.loader.loadSingleRes(ToolsApp.CMD_WORK_PATH+"/"+fileName+".png", ResLoader.IMG, handleImageLoaded, null, handleLoadError);
+			if(_type==1)
+			{
+				for(var i:int=1; i<_typeParam; i++)
+				{
+					ToolsApp.loader.loadSingleRes(ToolsApp.CMD_WORK_PATH+"/"+fileName+"_"+i+".json", ResLoader.TXT, handleDataLoaded, null, handleLoadError, i);
+					ToolsApp.loader.loadSingleRes(ToolsApp.CMD_WORK_PATH+"/"+fileName+"_"+i+".png", ResLoader.IMG, handleImageLoaded, null, handleLoadError, i);
+				}
+			}
+		}
+		
+		private function handleLoadError(res:ResData=null, msg:String=null):void
+		{
+			Alert.show("打包临时文件加载错误"+res.resPath+" 信息：");
+			_curLoadNum++;
+			checkEnd();
+		}
+		
+		public function handleDataLoaded(res:ResData):void{
+			var jsonData:Object = JSON.parse(res.data);
+			Log.log("打包配置加载完毕"+dirPath);
+			var data:String = res.data;
+			var childIndex:int = res.param;
 			var json:Object = JSON.parse(data);
-//			var idx:int = 0;//如果图片没有按照规则命名则使用默认的index
-//			var regNum:RegExp = /[0-9]/gi;
 			var keyArr:Array = [];
+			var idx:int = childIndex;
 			for(var key:String in json.frames)
 			{
 				var frame:Object = json.frames[key];
 				var item:Object = frame.frame;
 				var ox:int;
 				var oy:int;
-//				if(frame.rotated)
-//				{
-//					ox = frame.spriteSourceSize.y - frame.sourceSize.w/2;
-//					oy = frame.spriteSourceSize.x - frame.sourceSize.h/2;
-//				}else{
-					ox = frame.spriteSourceSize.x - frame.sourceSize.w/2;
-					oy = frame.spriteSourceSize.y - frame.sourceSize.h/2;
-//				}
-				keyArr.push({"key":key, "x":item.x, "y":item.y, "w":item.w, "h":item.h, "ox":ox, "oy":oy, rotated:frame.rotated})
+				ox = frame.spriteSourceSize.x - frame.sourceSize.w/2;
+				oy = frame.spriteSourceSize.y - frame.sourceSize.h/2;
+				keyArr.push({"key":key, "x":item.x, "y":item.y, "w":item.w, "h":item.h, "ox":ox, "oy":oy, rotated:frame.rotated, childIndex:childIndex})
 			}
 			keyArr.sortOn("key");
 			for(var i:int=0; i<keyArr.length; i++)
 			{
 				var subItem:Object = keyArr[i];
-				_data.addSubTexture(subItem.x, subItem.y, subItem.w, subItem.h, subItem.ox, subItem.oy, subItem.rotated);
+				_data.addMainTexture(idx, subItem.x, subItem.y, subItem.w, subItem.h, subItem.ox, subItem.oy, subItem.rotated, subItem.childIndex);
+				if(_type ==1)
+				{
+					idx += _typeParam;
+				}else{
+					idx ++;
+				}
 			}
 			if(json.meta.scale!=1)
 			{
 				_data.scale = json.meta.scale;
 			}
+			if(_type == 1)
+			{
+				_data.imgLen = _typeParam;
+			}
+			_curLoadNum ++;
 			checkEnd();
 		}
 		
-		public function handleImageLoaded(data:Object):void
+		public function handleImageLoaded(res:ResData):void
 		{
-			_img = data as BitmapData;
+			Log.log("打包图片加载完毕"+dirPath);
+			var img:BitmapData = res.data as BitmapData;
+			var childIndex:int = res.param;
+			var pngByte:ByteArray = PNGEncoder.encode(img);
+			var imgPath:String =_outPath+".png";
+			if(childIndex>0)
+			{
+				imgPath = _outPath+"_"+childIndex+".png";
+			}
+			ToolsApp.file.saveByteFile(imgPath, pngByte);
+			ToolsApp.cmdOper(File.applicationDirectory.nativePath+"/bin/pngquant --nofs --force --ext .png "+imgPath, " PNG_ENCODING "+_pathInfo.fileName);
+			_curLoadNum ++;
 			checkEnd();
 		}
 		
 		private function checkEnd():void
 		{
-			if(_data && _img)
+			if(_curLoadNum>=_loadNum)
 			{
+				ToolsApp.data.addMovie(outPath+".json");
 				_isComplete = true;
+				if(_onComplete != null)
+				{
+					_onComplete();
+					ToolsApp.file.saveFile(_outPath+".json", _data.toJson());
+				}
 				if(onComplete!= null)
 				{
-					//todo 放到onComplete中
-					
-					ToolsApp.file.saveFile(_outPath+".json", _data.toJson());
-					var pngByte:ByteArray = PNGEncoder.encode(_img);
-					var imgPath:String =_outPath+".png";
-					ToolsApp.file.saveByteFile(imgPath, pngByte);
-					ToolsApp.cmdOper(File.applicationDirectory.nativePath+"/bin/pngquant --nofs --force --ext .png "+imgPath, " PNG_ENCODING "+_pathInfo.fileName);
 					onComplete();
 				}
 			}

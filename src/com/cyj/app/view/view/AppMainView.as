@@ -208,7 +208,7 @@ package com.cyj.app.view.view
 			return false;
 		}
 		
-		private function isImage(fileType:String):Boolean
+		public function isImage(fileType:String):Boolean
 		{
 			if(!fileType)return false;
 			 fileType = fileType.toLocaleLowerCase();

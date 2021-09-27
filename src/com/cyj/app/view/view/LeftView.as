@@ -6,6 +6,7 @@ package com.cyj.app.view.view
 	import com.cyj.app.view.common.Alert;
 	import com.cyj.app.view.ui.app.LeftViewUI;
 	import com.cyj.app.view.unit.Movie;
+	import com.cyj.utils.Log;
 	import com.cyj.utils.file.FileManager;
 	
 	import flash.events.Event;
@@ -29,6 +30,7 @@ package com.cyj.app.view.view
 			
 			btnOpenOutDir.clickHandler = new Handler(handleOpenOutDir);
 			btnSetOutDir.clickHandler = new Handler(handleSetOutDir);
+			btnModifyAllSpeed.clickHandler = new Handler(handleModifyAllSpeed);
 			
 			btnRefushOutDir.clickHandler = new Handler(handleRefushTreeOut);
 			ToolsApp.event.on(SimpleEvent.PACKET_END, handleRefushTreeOut);
@@ -120,6 +122,26 @@ package com.cyj.app.view.view
 		private function handleSetOutDir():void
 		{
 			ToolsApp.file.openFile(handleOnSelectOutPath, true, ToolsApp.data.outPath);
+		}
+		/**修改所有的帧速**/
+		private function handleModifyAllSpeed():void
+		{
+			if(!inputAllSpeed.text)
+			{
+				Alert.show("请先输入帧频");
+				return;
+			}
+			var speed:int = int(inputAllSpeed.text);
+			
+			var movies:Vector.<Movie> =ToolsApp.data.movies;
+			for(var i:int=0; i<movies.length; i++)
+			{
+				var movie:Movie = movies[i];
+				movie.data.speed = speed;
+				ToolsApp.file.saveFile(movie.jsonPath, movie.data.toJson());
+			}
+			refushList();
+			Log.log("保存speed="+speed+"成功");
 		}
 		
 		private function handleOnSelectOutPath(filePath:String):void

@@ -19,21 +19,22 @@ package com.cyj.app.view.unit.data
 //		private var _offY:int = 0;
 		
 		private var _maxRect:Rectangle = new Rectangle();
+		/**字图片的个数**/
+		public var imgLen:int=1;
 		
 		
 		public function MovieData()
 		{
 		}
 		
-		public function addSubTexture(x:int, y:int, w:int, h:int, ox:int, oy:int, rotated:Boolean):void
+		public function addMainTexture(id:int,x:int, y:int, w:int, h:int, ox:int, oy:int, rotated:Boolean, childIndex:int):void
 		{
 //			sub[index] = [x, y, w, h, ox, oy];
-			var subData:SubTextureData = new SubTextureData(x, y, w, h, ox, oy, rotated);
-			sub.push(subData);
+			var subData:SubTextureData = new SubTextureData(x, y, w, h, ox, oy, rotated, childIndex);
+			sub[id] = subData;
 //			len = sub.length;
 			refushMaxRect();
 		}
-		
 		private function refushMaxRect():void
 		{
 			_maxRect.setEmpty();
@@ -42,6 +43,7 @@ package com.cyj.app.view.unit.data
 			for(var i:int=0; i<sub.length; i++)
 			{
 				var subData:SubTextureData = sub[i];
+				if(!subData)continue;
 				if(subData.ox<_maxRect.x)_maxRect.x = subData.ox;
 				if(subData.oy<_maxRect.y)_maxRect.y = subData.oy;
 				if(subData.w>_maxRect.width)_maxRect.width  = subData.w;
@@ -146,23 +148,29 @@ package com.cyj.app.view.unit.data
 			var movie:MovieData = new MovieData();
 			var arr:Array = json.sub;
 			var i:int=0;
+			var idx:int = 0;
 			while(arr.length>i)
 			{
 				var size:int = arr[i];
 				var rotated:Boolean = false;
+				var childIndex:int = 0;
 				if(size>=7)
 					rotated = arr[i+7];
+				if(size>=8)
+					childIndex = arr[i+8];
 				if(size>=6)
-					movie.addSubTexture(arr[i+1], arr[i+2], arr[i+3], arr[i+4], arr[i+5], arr[i+6], rotated);
+					movie.addMainTexture(idx, arr[i+1], arr[i+2], arr[i+3], arr[i+4], arr[i+5], arr[i+6], rotated, childIndex);
 				if(size<0)
 				{
 					Alert.show("当前json数据格式有误");
 					Log.log("当前json数据格式有误");
 					break;
 				}
+				idx ++;
 				i = i+ size+1;//加上size自身占位
 			}
 			movie.speed = json.speed;
+			movie.imgLen = json.imgLen||1;
 			if(json.scale)
 			{
 				movie.scale = json.scale;
@@ -180,7 +188,9 @@ package com.cyj.app.view.unit.data
 				var sub:SubTextureData = this.sub[i];
 				var params:Array = [sub.x, sub.y, sub.w, sub.h, sub.ox, sub.oy];
 				if(sub.rotated)
-					params.push(sub.rotated?1:0);
+					params[6]=(sub.rotated?1:0);
+				if(sub.childIndex>0)
+					params[7]=(sub.childIndex);
 //				var size:int = 6;//数据的长度
 				obj.sub.push(params.length);
 				obj.sub = obj.sub.concat(params);
@@ -189,6 +199,7 @@ package com.cyj.app.view.unit.data
 			{
 				obj.scale = this.scale;
 			}
+			if(this.imgLen>1)obj.imgLen = this.imgLen;
 			return JSON.stringify(obj);
 		}
 		

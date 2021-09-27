@@ -56,6 +56,24 @@ package com.cyj.utils.file
 			}
 			return allFiles;
 		}
+		/**删除文件**/
+		public static function deleteFiles(filePath:String):void
+		{
+			var file:File = new File(filePath);
+			if(file.exists)
+			{
+				if(file.isDirectory)
+				{
+					var files:Array = file.getDirectoryListing();
+					for(var i:int=0; i<files.length; i++)
+					{
+						files[i].deleteFile();
+					}
+				}else{
+					file.deleteFile();
+				}
+			}
+		}
 		
 		public function openDir(path:String):void
 		{

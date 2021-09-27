@@ -4,6 +4,7 @@
     <CheckBox label="使用自动缩放至1024" skin="png.guidecomp.checkbox_单选" x="2" y="51" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkAutoScale" selected="true"/>
     <CheckBox label="是否使用旋转" skin="png.guidecomp.checkbox_单选" y="26" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkAutoRotation" selected="true"/>
     <CheckBox label="是否保留目录" skin="png.guidecomp.checkbox_单选" x="1" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkSaveDirStruct" selected="true"/>
+    <CheckBox label="分图集" skin="png.guidecomp.checkbox_单选" x="146" y="51" layer="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkSplitImg" selected="true"/>
   </Box>
   <Box layers="1,1,0,0,第 1 层" layer="1" x="2" y="33" var="boxTop">
     <TextInput skin="png.guidecomp.textinput_文字输入底框_2" x="59" y="193" layer="1" width="50" height="22" color="0xff6600" var="inputOffX" margin="3,2,2,2"/>

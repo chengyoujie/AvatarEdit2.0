@@ -27,7 +27,7 @@ package com.cyj.app.view.unit
 		
 		private var _jsonFilePath:String;
 		private var _data:MovieData;
-		private var _img:BitmapData;
+//		private var _img:BitmapData;
 		private var _bd:Bitmap;
 		private var _frame:int;
 		private var _cacheImg:Object;
@@ -35,6 +35,7 @@ package com.cyj.app.view.unit
 		private var _fileName:String;
 //		private var _centerShape:Shape;
 		private var _pause:Boolean = false;
+		private var _imgs:Object = {};//index->img:BitmapData
 		
 		public function Movie()
 		{
@@ -57,7 +58,7 @@ package com.cyj.app.view.unit
 		{
 			_jsonFilePath = jsonFilePath;
 			_data = null;
-			_img =  null;
+			_imgs = {};
 			_frame = -1;
 			_cacheImg = {};
 			var file:File = new File(_jsonFilePath);
@@ -82,6 +83,13 @@ package com.cyj.app.view.unit
 				ToolsApp.data.removeMovie(this);
 				return;
 			}
+			if(_data.imgLen>1)
+			{
+				for(var i:int=1; i<_data.imgLen; i++)	
+				{
+					ToolsApp.loader.loadSingleRes(_jsonFilePath.replace(".json", "_"+i+".png"), ResLoader.IMG, handleImageLoaded, null, handleLoadError, i);
+				}
+			}
 			refushSelectRect();
 			if(_data && _data.scale && _data.scale!=1)
 			{
@@ -93,7 +101,8 @@ package com.cyj.app.view.unit
 		
 		private function handleImageLoaded(res:ResData):void
 		{
-			_img = res.data as BitmapData;
+			var childIndex:int = res.param;
+			_imgs[childIndex] = res.data as BitmapData;
 		}
 		
 		public function get jsonPath():String
@@ -108,7 +117,7 @@ package com.cyj.app.view.unit
 		
 		public function render():void
 		{
-			if(!_data || !_img || _pause)return;//等数据完成后在开始
+			if(!_data || !_imgs || _pause)return;//等数据完成后在开始
 			var now:int = getTimer();
 			var frame:int = now%(1000/_data.speed*_data.sub.length)/(1000/_data.speed);
 			setFrame(frame);
@@ -123,6 +132,8 @@ package com.cyj.app.view.unit
 				frame = frame%_data.sub.length;
 			}
 			var frameData:SubTextureData = _data.sub[frame];
+			var img:BitmapData = _imgs[frameData.childIndex];
+			if(!img)return;
 			if(!_cacheImg[frame] && frameData)
 			{	//0, x,  1.y   2w, 3,h   4,ox  5oy
 				var bd:BitmapData;
@@ -132,10 +143,10 @@ package com.cyj.app.view.unit
 					bd = new BitmapData(frameData.w, frameData.h, true, 0);
 					var matrix:Matrix = new Matrix(0, -1, 1,0, -frameData.y, frameData.x+frameData.h);
 //					matrix.translate(-frameData.y, frameData.x+frameData.h);
-					bd.draw(_img, matrix, null, null);
+					bd.draw(img, matrix, null, null);
 				}else{
 					bd = new BitmapData(frameData.w, frameData.h, true, 0);
-					bd.copyPixels(_img, new Rectangle(frameData.x, frameData.y, frameData.w, frameData.h), new Point());
+					bd.copyPixels(img, new Rectangle(frameData.x, frameData.y, frameData.w, frameData.h), new Point());
 				}
 				_cacheImg[frame] = bd;
 			}

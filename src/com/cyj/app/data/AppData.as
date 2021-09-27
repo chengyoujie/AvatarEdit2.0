@@ -13,6 +13,7 @@ package com.cyj.app.data
 		private var _movies:Vector.<Movie> = new Vector.<Movie>();
 		private var _selectMovie:Movie;
 		public var autoScale:Boolean = true;
+		public var splitImg:Boolean = false;
 		public var autoRotation:Boolean = true;
 		public var saveDirStruct:Boolean = false;
 		public var outPath:String = File.applicationDirectory.nativePath+"/资源导出/";
@@ -33,6 +34,7 @@ package com.cyj.app.data
 			var obj:Object = {};
 			obj.outPath = this.outPath;
 			obj.autoScale = this.autoScale;
+			obj.splitImg = this.splitImg;
 			obj.autoRotation = this.autoRotation;
 			obj.saveDirStruct = this.saveDirStruct;
 			obj.outImgPath = this.outImgPath;
@@ -46,6 +48,7 @@ package com.cyj.app.data
 			var obj:Object = JSON.parse(str);
 			this.outPath  = obj.outPath;
 			this.autoScale = obj.autoScale ;
+			this.splitImg = obj.splitImg ;
 			this.autoRotation = obj.autoRotation;
 			this.saveDirStruct = obj.saveDirStruct;
 			this.outImgPath = obj.outImgPath;

@@ -7,6 +7,7 @@ package com.cyj.app.view.ui.app {
 		public var checkAutoScale:CheckBox = null;
 		public var checkAutoRotation:CheckBox = null;
 		public var checkSaveDirStruct:CheckBox = null;
+		public var checkSplitImg:CheckBox = null;
 		public var boxTop:Box = null;
 		public var inputOffX:TextInput = null;
 		public var inputOffY:TextInput = null;
@@ -34,6 +35,7 @@ package com.cyj.app.view.ui.app {
 			    <CheckBox label="使用自动缩放至1024" skin="png.guidecomp.checkbox_单选" x="2" y="51" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkAutoScale" selected="true"/>
 			    <CheckBox label="是否使用旋转" skin="png.guidecomp.checkbox_单选" y="26" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkAutoRotation" selected="true"/>
 			    <CheckBox label="是否保留目录" skin="png.guidecomp.checkbox_单选" x="1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkSaveDirStruct" selected="true"/>
+			    <CheckBox label="分图集" skin="png.guidecomp.checkbox_单选" x="146" y="51" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkSplitImg" selected="true"/>
 			  </Box>
 			  <Box x="2" y="33" var="boxTop">
 			    <TextInput skin="png.guidecomp.textinput_文字输入底框_2" x="59" y="193" width="50" height="22" color="0xff6600" var="inputOffX" margin="3,2,2,2"/>

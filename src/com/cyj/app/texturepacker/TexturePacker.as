@@ -5,6 +5,7 @@ package com.cyj.app.texturepacker
 	import com.cyj.app.event.SimpleEvent;
 	import com.cyj.app.view.common.Alert;
 	import com.cyj.utils.Log;
+	import com.cyj.utils.file.FileManager;
 	import com.cyj.utils.load.ResData;
 	import com.cyj.utils.load.ResLoader;
 	
@@ -26,6 +27,8 @@ package com.cyj.app.texturepacker
 		private var _lastScale:Number = 1;
 		private var _canUseScale:Number = 0;
 		private var _packetInfo:Array = [];
+		/**texture导出文件的唯一索引**/
+		private var _outIndex:int = 0;
 		
 		public function TexturePacker()
 		{
@@ -90,6 +93,7 @@ package com.cyj.app.texturepacker
 				}
 				Alert.show("打包结束\n"+alertStr);
 				Log.log("打包结束");
+				FileManager.deleteFiles(ToolsApp.CMD_WORK_PATH);
 				_isRuning = false;
 				ToolsApp.event.post(SimpleEvent.PACKET_END);
 				return;
@@ -122,7 +126,7 @@ package com.cyj.app.texturepacker
 					{
 						if(_canUseScale)
 						{
-							handleRunPacketCmd(_curItem.dirPath, 1024, _canUseScale);
+							handleRunPacketCmd(_curItem.dirPath, 1024, 0, _canUseScale);
 						}else{
 							Alert.show("当前图片较大 尝试缩放多次无效，已放弃");	
 						}
@@ -136,7 +140,12 @@ package com.cyj.app.texturepacker
 						newScale = _curScale/2;	
 					}
 					Log.log("当前图片较大 尝试缩放"+_curScale);
-					handleRunPacketCmd(_curItem.dirPath, 1024, newScale);
+					handleRunPacketCmd(_curItem.dirPath, 1024, 0, newScale);
+				}else if(ToolsApp.data.splitImg){//使用分图集
+					_packScaleNum ++;
+					_lastScale = _curScale;//分图集的数目
+					_curScale ++;
+					handleRunPacketCmd(_curItem.dirPath, 1024, 1, _curScale);
 				}else{//不适用缩放打包
 					_packSizeNum ++;
 					if(_packSizeNum>3)
@@ -171,71 +180,87 @@ package com.cyj.app.texturepacker
 						newScale = (_lastScale - _curScale)/2 + _curScale;
 						Log.log("当前图片尺寸: width: "+w+" height:"+h+"  尝试使用：scale="+newScale+" 打包图片");
 						_packScaleNum++;
-						handleRunPacketCmd(_curItem.dirPath, 1024, newScale);
+						handleRunPacketCmd(_curItem.dirPath, 1024, 0, newScale);
 						return;
 					}
-					
 				}
 			}
-			_packetInfo.push({path:_curItem.outPath, scale:_curScale});
-			ToolsApp.loader.loadSingleRes(ToolsApp.CMD_WORK_PATH+"/out.json", ResLoader.TXT, handleDataLoaded);
-			ToolsApp.loader.loadSingleRes(ToolsApp.CMD_WORK_PATH+"/out.png", ResLoader.IMG, handleImageLoaded);
+			var packetInfo:Object = {path:_curItem.outPath, scale:1};
+			if(ToolsApp.data.autoScale){
+				packetInfo.scale = _curScale;
+				_curItem.setParam(0, _curScale);
+			}else if(ToolsApp.data.splitImg){
+				packetInfo.split = _curScale;
+				_curItem.setParam(1, _curScale);
+			}
+			_packetInfo.push(packetInfo);
+			_curItem.startLoad("out"+_outIndex, doNext);
 		}
 		
 		
-		
-		private function handleRunPacketCmd(dirPath:String, imgMaxSize:int=1024, scale:Number=1):void
+		/**
+		 * 图集打包
+		 * @param dirPath 文件路径
+		 * @param imgMaxSize 最大尺寸
+		 * @param type   打包类型  0 如果超出进行缩放， 1如果超过进行拆分
+		 * @param param  打包参数
+		 */
+		private function handleRunPacketCmd(dirPath:String, imgMaxSize:int=1024, type:Number=0, scale:Number=1):void
 		{
 			var param:String = " --max-width "+imgMaxSize+" --max-height "+imgMaxSize;
-			if(scale!=1)
-			{
-				param += " --scale "+scale;
-			}
-			_curScale = scale;
+			var packetStr:String;
+			_outIndex ++;
+			
 			var rotation:String = "--enable-rotation";
 			if(!ToolsApp.data.autoRotation)
 			{
 				rotation = "--disable-rotation";
 			}
-			var packetStr:String = '"'+ToolsApp.data.texturePackerPath+"TexturePacker"+'"'+" --sheet out.png --data out.json --format json "+ param +" --texturepath img/testsave --shape-padding 2 --allow-free-size --trim  "+rotation+" "+'"'+dirPath.replace(/\//gi, "\\")+'"';
+			if(type == 1)//超过进行拆分
+			{
+				if(scale == 1)//1个图集的时候不用管
+				{
+					packetStr = '"'+ToolsApp.data.texturePackerPath+"TexturePacker"+'"'+" --sheet out"+_outIndex+".png --data out"+_outIndex+".json --format json "+ param +" --texturepath "+_outIndex+" --shape-padding 2 --allow-free-size --trim  "+rotation+" "+'"'+dirPath.replace(/\//gi, "\\")+'"';
+				}else{
+					var dirFile:File = new File(dirPath);
+					var allFiles:Array = dirFile.getDirectoryListing();
+					var files:Array = [];
+					var idx:int = 0;
+					for(var i:int=0; i<allFiles.length; i++)
+					{
+						var file:File = allFiles[i];
+						if(ToolsApp.view.isImage(file.extension))
+						{
+							if(!files[idx])files[idx]=[];
+							files[idx].push(file.nativePath);
+							idx++;
+							idx = (idx)%scale;
+						}
+					}
+					packetStr = "";
+					for(i=0; i<files.length; i++){
+						if(files[i].length<=1)
+						{
+							Alert.show("当前图片某个图片超过了1024，已放弃分图集");
+							return;
+						}
+						var packName:String = "out"+_outIndex+"_"+i;
+						if(i==0)packName = "out"+_outIndex;
+						packetStr += '\n"'+ToolsApp.data.texturePackerPath+"TexturePacker"+'"'+" --sheet "+packName+".png --data "+packName+".json --format json "+ param +" --texturepath "+_outIndex+" --shape-padding 2 --allow-free-size --trim  "+rotation+" "+'"'+(files[i].join('" "')+"").replace(/\//gi, "\\")+'"';
+					}
+				}
+				_curScale = scale;
+			}else{
+				if(scale!=1)
+				{
+					param += " --scale "+scale;
+				}
+				_curScale = scale;
+				packetStr = '"'+ToolsApp.data.texturePackerPath+"TexturePacker"+'"'+" --sheet out"+_outIndex+".png --data out"+_outIndex+".json --format json "+ param +" --texturepath "+_outIndex+" --shape-padding 2 --allow-free-size --trim  "+rotation+" "+'"'+dirPath.replace(/\//gi, "\\")+'"';
+			}
+			
 			
 			ToolsApp.cmdOper(packetStr, _curItem.dirPath, true);
-		}
-		
-		private function handleDataLoaded(res:ResData):void
-		{
-			if(_curItem)
-			{
-				Log.log("打包配置加载完毕"+_curItem.dirPath);
-				_curItem.handleDataLoaded(res.data);
-			}
-			checkComplete();
-		}
-		
-		private function handleImageLoaded(res:ResData):void
-		{
-			if(_curItem)
-			{
-				Log.log("打包图片加载完毕"+_curItem.dirPath);
-				_curItem.handleImageLoaded(res.data);
-			}
-			checkComplete();
-		}
-		
-		/**当前是否正在运行中**/
-		public function get isRuning():Boolean
-		{
-			return _isRuning;
-		}
-		
-		private function checkComplete():void
-		{
-			if(_curItem.isComplete)
-			{
-				if(_curItem.outPath)
-					ToolsApp.data.addMovie(_curItem.outPath+".json");
-				doNext();
-			}
 		}
 		
 		private function handleError(res:ResData=null, msg:String=null):void
@@ -251,6 +276,15 @@ package com.cyj.app.texturepacker
 				doNext();
 			}
 		}
+		
+		
+		/**当前是否正在运行中**/
+		public function get isRuning():Boolean
+		{
+			return _isRuning;
+		}
+		
+		
 		
 		
 		

@@ -33,6 +33,7 @@ package com.cyj.app.view.view
 			btnReSetZero.clickHandler = new Handler(handleReSetZero);
 			btnOffsetZero.clickHandler = new Handler(handleOffsetZero);
 			checkAutoScale.clickHandler = new Handler(handleAutoScaleChange);
+			checkSplitImg.clickHandler = new Handler(handleSplitImgChange);
 			checkAutoRotation.clickHandler = new Handler(handleAutoRotationChange);
 			checkSaveDirStruct.clickHandler = new Handler(handleSaveDirStruct);
 			_bindData.push(
@@ -58,6 +59,8 @@ package com.cyj.app.view.view
 		public function initView():void
 		{
 			checkAutoScale.selected = ToolsApp.data.autoScale;
+			checkSplitImg.visible = !checkAutoScale.selected;
+			checkSplitImg.selected = ToolsApp.data.splitImg;
 			checkAutoRotation.selected = ToolsApp.data.autoRotation;
 			checkSaveDirStruct.selected = ToolsApp.data.saveDirStruct;
 			inputExportImg.text = ToolsApp.data.outImgPath;
@@ -157,6 +160,11 @@ package com.cyj.app.view.view
 		private function handleAutoScaleChange():void
 		{
 			ToolsApp.data.autoScale = checkAutoScale.selected;
+			checkSplitImg.visible = !checkAutoScale.selected;
+		}
+		
+		private function handleSplitImgChange():void{
+			ToolsApp.data.splitImg = checkSplitImg.selected;
 		}
 		
 		private function handleAutoRotationChange():void
