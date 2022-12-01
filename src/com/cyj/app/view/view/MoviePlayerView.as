@@ -4,6 +4,8 @@ package com.cyj.app.view.view
 	import com.cyj.app.event.SimpleEvent;
 	import com.cyj.app.view.ui.app.MoviePlayerViewUI;
 	import com.cyj.app.view.unit.Movie;
+	import com.cyj.app.view.unit.data.MovieData;
+	import com.cyj.app.view.unit.data.SubTextureData;
 	
 	import flash.display.Shape;
 	import flash.events.KeyboardEvent;
@@ -31,8 +33,21 @@ package com.cyj.app.view.view
 			App.timer.doFrameLoop(1, handleTick);
 			ToolsApp.event.on(SimpleEvent.MOVIE_ADD, handleAddMovie);
 			ToolsApp.event.on(SimpleEvent.MOVIE_REMOVE, handleRemoveMovie);
+			ToolsApp.event.on(SimpleEvent.MOVIE_SELECT, handleShowMovieInfo)
 			this.addEventListener(MouseEvent.MOUSE_DOWN, handlerStarDrag, true);
 			App.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleKeyDown);
+		}
+		
+		private function handleShowMovieInfo(e:SimpleEvent): void {
+			var movie:Movie = ToolsApp.data.selectMovie;
+			if(movie){
+				var data:MovieData = movie.data;
+				txtMCInfo.text = "MC: x:"+data.maxRect.x+", y:"+data.maxRect.y+" w:"+data.maxRect.width+" h:"+data.maxRect.height;
+				
+			}else{
+				txtMCInfo.text = "MC信息";
+				txtFrameInfo.text = "帧频信息";
+			}
 		}
 		
 		public function resize(w:int, h:int):void
@@ -42,7 +57,7 @@ package com.cyj.app.view.view
 			txtDes.width = w;
 			txtDes.y = h/2 - txtDes.height/2;
 			mcContain.x = w/2;
-			mcContain.y = int(4*h/5);
+			mcContain.y = int(2*h/3);
 			drawBaseLine();
 			refushMask();
 		}
@@ -73,6 +88,12 @@ package com.cyj.app.view.view
 			for(var i:int=0; i<movies.length; i++)
 			{
 				movies[i].render();
+			}
+			var movie:Movie = ToolsApp.data.selectMovie;
+			if(movie){
+				var data:MovieData = movie.data;
+				var frameData:SubTextureData = movie.getFrameData(movie.frame);
+				txtFrameInfo.text = "Frame: "+(movie.frame+1)+" time:"+int( (movie.frame+1) * 1000/movie.data.speed)+" x:"+frameData.x+ " y:"+ frameData.y+ " ox:"+frameData.ox+" oy:"+frameData.oy+" w:"+frameData.w+" h:"+frameData.h;
 			}
 		}
 		
@@ -119,6 +140,7 @@ package com.cyj.app.view.view
 				{
 					ToolsApp.data.selectMovie = movie;
 				}
+				ToolsApp.focus = movie;
 				movie.startDrag(false);
 			}else{
 				var stageX:int = e.stageX;
@@ -138,6 +160,7 @@ package com.cyj.app.view.view
 		{
 			var movie:Movie = ToolsApp.data.selectMovie;
 			if(!movie)return;
+			if(ToolsApp.focus != movie)return;
 			if(e.keyCode == Keyboard.UP)
 			{
 				movie.y -= 1;

@@ -112,8 +112,9 @@ package com.cyj.app.data
 			if(_selectMovie)
 				_selectMovie.select = false;
 			_selectMovie = movie;
-			if(_selectMovie)
+			if(_selectMovie){
 				_selectMovie.select = true;
+			}
 			ToolsApp.event.post(SimpleEvent.MOVIE_SELECT, _selectMovie);
 		}
 		

@@ -170,6 +170,16 @@ package com.cyj.app.view.unit
 			}
 		}
 		
+		public function getFrameData(frame:int):SubTextureData{
+			if(frame<0)
+			{
+				frame = _data.sub.length - 1;
+			}else{
+				frame = frame%_data.sub.length;
+			}
+			return _data.sub[frame];
+		}
+		
 		public function set pause(value:Boolean):void
 		{
 			_pause = value;

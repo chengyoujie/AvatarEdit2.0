@@ -81,6 +81,8 @@ package com.cyj.app.texturepacker
 			var json:Object = JSON.parse(data);
 			var keyArr:Array = [];
 			var idx:int = childIndex;
+			var regNum:RegExp = new RegExp(/.*?(\d+)/gi);
+			var isAllHasNum:Boolean = true;
 			for(var key:String in json.frames)
 			{
 				var frame:Object = json.frames[key];
@@ -89,12 +91,21 @@ package com.cyj.app.texturepacker
 				var oy:int;
 				ox = frame.spriteSourceSize.x - frame.sourceSize.w/2;
 				oy = frame.spriteSourceSize.y - frame.sourceSize.h/2;
-				keyArr.push({"key":key, "x":item.x, "y":item.y, "w":item.w, "h":item.h, "ox":ox, "oy":oy, rotated:frame.rotated, childIndex:childIndex})
+				var numStr:String = key.replace(/\D/gi, "");
+				if(isAllHasNum){
+					isAllHasNum = numStr.length>0;
+				}
+				keyArr.push({"key":key, num:int(numStr), "x":item.x, "y":item.y, "w":item.w, "h":item.h, "ox":ox, "oy":oy, rotated:frame.rotated, childIndex:childIndex})
 			}
-			keyArr.sortOn("key");
+			if(isAllHasNum){
+				keyArr.sortOn("num", Array.NUMERIC);	
+			}else{
+				keyArr.sortOn("key");			
+			}
 			for(var i:int=0; i<keyArr.length; i++)
 			{
 				var subItem:Object = keyArr[i];
+				trace(subItem.key);
 				_data.addMainTexture(idx, subItem.x, subItem.y, subItem.w, subItem.h, subItem.ox, subItem.oy, subItem.rotated, subItem.childIndex);
 				if(_type ==1)
 				{

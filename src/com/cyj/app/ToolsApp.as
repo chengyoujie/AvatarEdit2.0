@@ -24,6 +24,7 @@ package com.cyj.app
 	import flash.desktop.ClipboardFormats;
 	import flash.desktop.NativeApplication;
 	import flash.desktop.NativeDragManager;
+	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.NativeDragEvent;
@@ -47,6 +48,7 @@ package com.cyj.app
 		public static var event:EventManager = new EventManager();
 		public static var projects:Vector.<ProjectConfig> = new Vector.<ProjectConfig>();
 		public static var data:AppData = new AppData();
+		public static var focus:DisplayObject;
 		
 		public static var texturePacker:TexturePacker = new TexturePacker();
 //		public static var localCfg:LocalConfig = new LocalConfig();

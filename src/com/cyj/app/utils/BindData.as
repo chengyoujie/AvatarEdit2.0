@@ -1,5 +1,7 @@
 package com.cyj.app.utils
 {
+	import com.cyj.app.ToolsApp;
+	
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.text.TextField;
@@ -40,7 +42,9 @@ package com.cyj.app.utils
 			binded = true;
 			initData();
 			//			_text.addEventListener(FocusEvent.FOCUS_OUT, handleFouceOut);
-			_bindUI.addEventListener(Event.CHANGE, handleFouceOut);
+			_bindUI.addEventListener(FocusEvent.FOCUS_IN, handleFouceIn);
+			_bindUI.addEventListener(FocusEvent.FOCUS_OUT, handleFouceOut);
+			_bindUI.addEventListener(Event.CHANGE, handleChange);
 		}
 		
 		public function initData():void
@@ -56,17 +60,27 @@ package com.cyj.app.utils
 		{
 			if(_bindUI)
 			{
+				_bindUI.removeEventListener(FocusEvent.FOCUS_IN, handleFouceIn);
+				_bindUI.removeEventListener(FocusEvent.FOCUS_OUT, handleFouceOut);
 				//				_text.removeEventListener(FocusEvent.FOCUS_OUT, handleFouceOut);
-				_bindUI.removeEventListener(Event.CHANGE, handleFouceOut);
+				_bindUI.removeEventListener(Event.CHANGE, handleChange);
 			}
 			_data = null;
 			binded = false;
 			//			_onChangeFun = null;
 		}
 		
-		private function handleFouceOut(e:Event):void
+		private function handleFouceIn(e:FocusEvent):void {
+			ToolsApp.focus = _bindUI;
+		}
+		private function handleFouceOut(e:FocusEvent):void{
+			handleChange(null)
+		}
+		
+		private function handleChange(e:Event):void
 		{
 			if(!_listenerChange)return;
+			if(_bindUI[_uiProp] == "-")return;
 			if(_checkFun != null)
 			{
 				if(!_checkFun(_bindUI[_uiProp]))//检测是否可以使用

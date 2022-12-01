@@ -56,6 +56,10 @@ package com.cyj.app.view.view
 			checkExportImgScale.clickHandler = new Handler(handleExportImgScaleChange);
 		}
 		
+		private function handleCheckOffset(text:String):Boolean{
+			return text=="-"||text=="-0"
+		}
+		
 		public function initView():void
 		{
 			checkAutoScale.selected = ToolsApp.data.autoScale;
