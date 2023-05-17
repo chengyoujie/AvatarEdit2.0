@@ -139,6 +139,20 @@ package com.cyj.app.view.unit.data
 					newJson.sub.push(6, spliteItem[0], spliteItem[1], spliteItem[2], spliteItem[3], spliteItem[4], spliteItem[5]);
 				}
 				json = newJson;
+			}else if(json.frames && json.file)//图集的
+			{
+				var newJson2:Object = {};
+				newJson2.speed = json.speed || 12;
+				newJson2.sub = [];
+				for(var key2:String in json.frames)
+				{
+					var spliteItem2:Object = json.frames[key2];
+					//x:int, y:int, w:int, h:int, ox:int, oy:int, rotated:Boolean
+//					var offsetX2:int = (spliteItem2.sourceW - spliteItem2.w)/2;
+//					var offsetY2:int = (spliteItem2.sourceH - spliteItem2.h)/2;
+					newJson2.sub.push(6, spliteItem2.x, spliteItem2.y, spliteItem2.w, spliteItem2.h, spliteItem2.offX, spliteItem2.offY);
+				}
+				json = newJson2;
 			}
 			if(!json.sub)
 			{

@@ -49,6 +49,10 @@ package com.cyj.app.other
 					var lastIndex:int = key.lastIndexOf("_");
 					var fileType:String = key.substr(lastIndex+1);
 					var outFile:String = outUrl+"/"+(lastIndex!=-1?(key.substr(0, lastIndex)+"."+fileType):key);
+					if(fileType != "jpg" && fileType!="png" && fileType != "jpeg"){
+						fileType = "png";
+						outFile = outUrl+"/"+key+"."+fileType;
+					}
 					var bd:BitmapData = new BitmapData(item.w, item.h, true, 0);
 					bd.copyPixels(_img, new Rectangle(item.x, item.y, item.w, item.h), new Point());
 					var byte:ByteArray;

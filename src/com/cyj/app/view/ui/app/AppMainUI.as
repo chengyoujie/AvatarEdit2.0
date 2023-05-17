@@ -24,6 +24,7 @@ package com.cyj.app.view.ui.app {
 		public var boxTools:Box = null;
 		public var btnViewLog:Button = null;
 		public var btnOpenWeb:Button = null;
+		public var btnChangeSize:Button = null;
 		protected static var uiView:XML =
 			<View width="1024" height="800">
 			  <Image skin="png.comp.blank" x="0" y="0" width="1024" height="800" var="img_bg"/>
@@ -43,9 +44,10 @@ package com.cyj.app.view.ui.app {
 			  </Box>
 			  <LeftView x="0" y="39" runtime="com.cyj.app.view.view.LeftView" var="leftView"/>
 			  <RightView x="789" y="48" runtime="com.cyj.app.view.view.RightView" var="rightView"/>
-			  <Box x="930" y="8" var="boxTools">
-			    <Button label="Log" skin="png.guidecomp.btn_小按钮_1" x="41" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0x0" var="btnViewLog" width="43" height="32" sizeGrid="10,"/>
-			    <Button skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0x0" var="btnOpenWeb" width="43" height="32" sizeGrid="10," label="Web"/>
+			  <Box x="887" y="7" var="boxTools">
+			    <Button label="Log" skin="png.guidecomp.btn_小按钮_1" x="41" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0x0" var="btnViewLog" width="43" height="32" sizeGrid="10," y="1"/>
+			    <Button skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0x0" var="btnOpenWeb" width="43" height="32" sizeGrid="10," label="Web" y="1"/>
+			    <Button label="改尺寸" skin="png.guidecomp.btn_小按钮_1" x="85" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0x0" var="btnChangeSize" width="43" height="32" sizeGrid="10,"/>
 			  </Box>
 			</View>;
 		public function AppMainUI(){}

@@ -36,6 +36,7 @@ package com.cyj.app.view.view
 			appName.text = ToolsApp.config.appName;
 			btnViewLog.clickHandler = new Handler(handleOpenLog);
 			btnOpenWeb.clickHandler = new Handler(handleOpenGame);
+			btnChangeSize.clickHandler = new Handler(handleOpenChangeSize);
 			boxDir.visible = false;
 			ToolsApp.texturePacker.init();
 			leftView.initView();
@@ -73,6 +74,10 @@ package com.cyj.app.view.view
 			navigateToURL(request,"_blank");
 		}
 		
+		private function handleOpenChangeSize():void{
+			ChangeSizeView.show();
+		}
+		
 		
 		private function checkOnFile(file:File):void
 		{
@@ -94,7 +99,8 @@ package com.cyj.app.view.view
 			var jsonData:Object = JSON.parse(res.data);
 			if(jsonData.frames && jsonData.file)//图集的， 直接分解
 			{
-				new SplitUIImage(res.resPath);
+//				new SplitUIImage(res.resPath);
+				ToolsApp.data.addMovie(res.resPath);
 			}else{
 				ToolsApp.data.addMovie(res.resPath);			
 			}
