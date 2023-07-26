@@ -35,6 +35,45 @@ package com.cyj.app.view.unit.data
 //			len = sub.length;
 			refushMaxRect();
 		}
+		
+		
+		public function parseTexturePackData(json:Object):void {
+			var keyArr:Array = [];
+			var idx:int = 0;
+			var regNum:RegExp = new RegExp(/.*?(\d+)/gi);
+			var isAllHasNum:Boolean = true;
+			for(var key:String in json.frames)
+			{
+				var frame:Object = json.frames[key];
+				var item:Object = frame.frame;
+				var ox:int;
+				var oy:int;
+				ox = frame.spriteSourceSize.x - frame.sourceSize.w/2;
+				oy = frame.spriteSourceSize.y - frame.sourceSize.h/2;
+				var numStr:String = key.replace(/\D/gi, "");
+				if(isAllHasNum){
+					isAllHasNum = numStr.length>0;
+				}
+				keyArr.push({"key":key, num:int(numStr), "x":item.x, "y":item.y, "w":item.w, "h":item.h, "ox":ox, "oy":oy, rotated:frame.rotated, childIndex:0})
+			}
+			if(isAllHasNum){
+				keyArr.sortOn("num", Array.NUMERIC);	
+			}else{
+				keyArr.sortOn("key");			
+			}
+			for(var i:int=0; i<keyArr.length; i++)
+			{
+				var subItem:Object = keyArr[i];
+				trace(subItem.key);
+				addMainTexture(idx, subItem.x, subItem.y, subItem.w, subItem.h, subItem.ox, subItem.oy, subItem.rotated, subItem.childIndex);
+				idx ++;
+			}
+			if(json.meta.scale!=1)
+			{
+				scale = json.meta.scale;
+			}
+		}
+		
 		private function refushMaxRect():void
 		{
 			_maxRect.setEmpty();
@@ -153,6 +192,20 @@ package com.cyj.app.view.unit.data
 					newJson2.sub.push(6, spliteItem2.x, spliteItem2.y, spliteItem2.w, spliteItem2.h, spliteItem2.offX, spliteItem2.offY);
 				}
 				json = newJson2;
+			}else if(json.frames && json.meta && json.meta.app){//texturepacker打包的
+//				var newJson3:Object = {};
+//				newJson3.speed =  12;
+//				newJson3.sub = [];
+//				for(var key3:String in json.frames)
+//				{
+//					var spliteItem3:Object = json.frames[key3];
+//					var splitInfo3:Object = 
+//					newJson2.sub.push(6, spliteItem3.x, spliteItem3.y, spliteItem3.w, spliteItem3.h, spliteItem3.offX, spliteItem3.offY);
+//				}
+//				json = newJson2;
+				var mv:MovieData = new MovieData();
+				mv.parseTexturePackData(json);
+				return mv;
 			}
 			if(!json.sub)
 			{

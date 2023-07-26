@@ -96,14 +96,17 @@ package com.cyj.app.view.view
 		
 		private function checkLoadJsonFile(res:ResData):void
 		{
-			var jsonData:Object = JSON.parse(res.data);
-			if(jsonData.frames && jsonData.file)//图集的， 直接分解
-			{
-//				new SplitUIImage(res.resPath);
-				ToolsApp.data.addMovie(res.resPath);
-			}else{
-				ToolsApp.data.addMovie(res.resPath);			
-			}
+//			var jsonData:Object = JSON.parse(res.data);
+//			if(jsonData.frames && jsonData.file)//图集的， 直接分解
+//			{
+////				new SplitUIImage(res.resPath);
+//				ToolsApp.data.addMovie(res.resPath);
+//			}else if(jsonData.frames && jsonData.meta && jsonData.meta.app){//texturepacker打包的
+//				
+//			}else{
+//				ToolsApp.data.addMovie(res.resPath);			
+//			}
+			ToolsApp.data.addMovie(res.resPath);	
 		}
 		
 		private function handleSizeChange(e:Event=null):void
