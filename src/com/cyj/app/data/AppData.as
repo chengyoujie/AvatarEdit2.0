@@ -23,7 +23,7 @@ package com.cyj.app.data
 		public var localJsonPath:String = File.userDirectory.nativePath+"/AvatarEdit2.0/local.json";
 		public var outImgPath:String = "D:/";
 		public var outImgSaveScale:Boolean = true;
-		
+		public var outImgOldSize:Boolean = true;
 		public function AppData()
 		{
 			
@@ -39,6 +39,7 @@ package com.cyj.app.data
 			obj.saveDirStruct = this.saveDirStruct;
 			obj.outImgPath = this.outImgPath;
 			obj.outImgSaveScale = this.outImgSaveScale;
+			obj.outImgOldSize = this.outImgOldSize;
 			return JSON.stringify(obj);
 		}
 		
@@ -53,6 +54,7 @@ package com.cyj.app.data
 			this.saveDirStruct = obj.saveDirStruct;
 			this.outImgPath = obj.outImgPath;
 			this.outImgSaveScale = obj.outImgSaveScale;
+			this.outImgOldSize = obj.outImgOldSize;
 		}
 		
 		

@@ -54,6 +54,7 @@ package com.cyj.app.view.view
 			btnExportSelectDir.clickHandler = new Handler(handleExportSelectDir);
 			btnExportOpenDir.clickHandler = new Handler(handleExportOpenDir);
 			checkExportImgScale.clickHandler = new Handler(handleExportImgScaleChange);
+			checkExportImgOldSize.clickHandler = new Handler(handleExportImgOldSizeChange);
 		}
 		
 		private function handleCheckOffset(text:String):Boolean{
@@ -69,7 +70,7 @@ package com.cyj.app.view.view
 			checkSaveDirStruct.selected = ToolsApp.data.saveDirStruct;
 			inputExportImg.text = ToolsApp.data.outImgPath;
 			checkExportImgScale.selected = ToolsApp.data.outImgSaveScale;
-			
+			checkExportImgOldSize.selected = ToolsApp.data.outImgOldSize;
 		}
 		
 		
@@ -231,6 +232,11 @@ package com.cyj.app.view.view
 			ToolsApp.data.outImgSaveScale = checkExportImgScale.selected;
 		}
 		
+		private function handleExportImgOldSizeChange():void
+		{
+			ToolsApp.data.outImgOldSize = checkExportImgOldSize.selected;
+		}
+		
 		private function handleExportOpenDir():void
 		{
 			if(!inputExportImg.text)
@@ -280,6 +286,7 @@ package com.cyj.app.view.view
 			var len:int = movie.totalFrame;
 			var data:MovieData = movie.data;
 			var saveScale:Boolean = checkExportImgScale.selected;
+			var oldSize:Boolean = checkExportImgOldSize.selected;
 			if(!data)
 			{
 				Alert.show("当前影片没有数据");
@@ -314,15 +321,24 @@ package com.cyj.app.view.view
 				var frameData:SubTextureData = data.sub[i];
 				if(bd)
 				{
-					var w:int = Math.max(800, bd.width, bd.height);
-					var outBd:BitmapData = new BitmapData(w, w, true, 0);
 					var ox:Number = frameData.ox - baseOffX;
 					var oy:Number = frameData.oy - baseOffY;
+					var w:int = Math.max(800, bd.width, bd.height);
+					var h:int = w;
+					var starX:int = ox+w/2;
+					var starY:int = oy+w/2;
+					if(oldSize){
+						starX = 0;
+						starY = 0;
+						w = bd.width;
+						h = bd.height;
+					}
+					var outBd:BitmapData = new BitmapData(w, h, true, 0);
 					if(saveScale && scale!=1)
 					{
-						outBd.draw(bd, new Matrix(scale, 0, 0, scale,scale*ox+w/2,oy+w/2));	
+						outBd.draw(bd, new Matrix(scale, 0, 0, scale,scale*starX,starY));	
 					}else{
-						outBd.copyPixels(bd,new Rectangle(0, 0, bd.width, bd.height), new Point(ox+w/2,oy+w/2));	
+						outBd.copyPixels(bd,new Rectangle(0, 0, bd.width, bd.height), new Point(starX,starY));	
 					}
 //					outBd.copyPixels(bd,new Rectangle(0, 0, bd.width, bd.height), new Point(w/2+ox,w/2+oy));//new Point(w/2-ox, w/2-oy));
 					var byte:ByteArray = PNGEncoder.encode(outBd);

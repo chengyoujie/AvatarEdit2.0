@@ -28,6 +28,7 @@ package com.cyj.app.view.ui.app {
 		public var checkExportImgScale:CheckBox = null;
 		public var btnExportOpenDir:Button = null;
 		public var btnReSetZero:Button = null;
+		public var checkExportImgOldSize:CheckBox = null;
 		protected static var uiView:XML =
 			<View width="230" height="710">
 			  <Image skin="png.guidecomp.框_02" x="0" y="0" sizeGrid="3,3,3,3,1" width="230" height="711" var="img_bg"/>
@@ -58,13 +59,14 @@ package com.cyj.app.view.ui.app {
 			    <Label text="/12" x="137" y="74" color="0xff9900" var="txtTotalFrame"/>
 			    <Label skin="png.comp.textarea" x="59" width="100" height="22" color="0xff6600" var="txtTotalTime" margin="3,2,2,2" y="42"/>
 			    <Label text="总时间:" x="11" y="43" color="0xff9900" stroke="0"/>
-			    <Button label="导出散图" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnExportImg" labelStroke="0" width="57" height="32" x="97" y="541"/>
-			    <TextInput skin="png.guidecomp.textinput_文字输入底框_2" x="57" y="520" width="169" height="22" color="0xff6600" var="inputExportImg" margin="3,2,2,2"/>
-			    <Label text="导出路径：" x="0" y="520" color="0xff9900" stroke="0"/>
-			    <Button label="浏览" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnExportSelectDir" labelStroke="0" width="38" height="32" x="153" y="541"/>
-			    <CheckBox label="是否缩放导出" skin="png.guidecomp.checkbox_单选" x="-3" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkExportImgScale" selected="true" y="546"/>
-			    <Button label="打开" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnExportOpenDir" labelStroke="0" width="38" height="32" x="191" y="541"/>
+			    <Button label="导出散图" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnExportImg" labelStroke="0" width="57" height="32" x="97" y="521"/>
+			    <TextInput skin="png.guidecomp.textinput_文字输入底框_2" x="57" y="500" width="169" height="22" color="0xff6600" var="inputExportImg" margin="3,2,2,2"/>
+			    <Label text="导出路径：" x="0" y="500" color="0xff9900" stroke="0"/>
+			    <Button label="浏览" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnExportSelectDir" labelStroke="0" width="38" height="32" x="153" y="521"/>
+			    <CheckBox label="是否缩放导出" skin="png.guidecomp.checkbox_单选" x="-3" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" selected="true" y="526" var="checkExportImgScale"/>
+			    <Button label="打开" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnExportOpenDir" labelStroke="0" width="38" height="32" x="191" y="521"/>
 			    <Button label="置于原点" skin="png.guidecomp.btn_小按钮_1" labelColors="0xc79a84,0xe0a98d,0x93827a" var="btnReSetZero" labelStroke="0" width="55" height="28" x="170" y="215"/>
+			    <CheckBox label="是否原尺寸导出" skin="png.guidecomp.checkbox_单选" x="-2" labelColors="0xc79a84,0xe0a98d,0x93827a" labelStroke="0" var="checkExportImgOldSize" selected="true" y="549"/>
 			  </Box>
 			</View>;
 		public function RightViewUI(){}
